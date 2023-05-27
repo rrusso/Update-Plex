@@ -1,6 +1,8 @@
 #!/bin/bash
 # tomssl.com/update-plex-server-on-ubuntu-automatically
-plex_token=$PUTYOURSHERE
+# Uncomment the next line if the script will be run as a cron job.
+# PATH=/usr/local/sbin:/usr/sbin:/sbin:$PATH 
+plex_token=PUTYOURSHERE
 beta_channel=false
 dry_run=false
 force_installation=false
