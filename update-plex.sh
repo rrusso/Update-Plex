@@ -61,12 +61,17 @@ fi
 
 url=`echo $rawjson | jq -r -c '.computer.Linux.releases | .[] | select(.url | contains("'$detected_arch'")) | select(.url | contains("debian")) | .url'`
 latestversion=`echo $rawjson | jq -r -c '.computer.Linux.version'`
+baselatestversion=`echo $rawjson | jq -r -c '.computer.Linux.version' | cut -d'-' -f1`
 installedversion=`dpkg -s plexmediaserver | grep -i '^Version' | cut -d' ' -f2`
+baseinstalledversion=`dpkg -s plexmediaserver | grep -i '^Version' | cut -d' ' -f2 | cut -d'-' -f1`
 echo "Latest version:    $latestversion"
 echo "Installed version: $installedversion"
 echo "------------------------------------------------------------"
+result=$(awk -v n1="$baseinstalledversion" -v n2="$baselatestversion" 'BEGIN{ print (n1 > n2) }')
 if [ "$installedversion" == "$latestversion" ]; then
   echo "Already on latest version."
+elif [ "$result" == 1 ]; then
+  echo "Newer version already installed."
 else
   echo "Need to upgrade..."
   echo "Found latest version at $url"
